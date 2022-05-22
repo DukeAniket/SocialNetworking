@@ -2,10 +2,12 @@ import express from "express";
 import bodyParser from 'body-parser';
 import mongoose from "mongoose";
 import cors from 'cors';
+import dotenv from 'dotenv';
 
 import postRoutes from "./routes/posts.js";
 
 const app = express();
+dotenv.config();
 
 app.use('/posts', postRoutes);
 
@@ -13,10 +15,11 @@ app.use(bodyParser.json({limit: "30mb", extendend : true}));
 app.use(bodyParser.urlencoded({limit: "30mb", extendend : true}));
 app.use(cors);
 
-const userName = "dukesocial";
-const userPass = "dukesocial12345";
+const userName = process.env.user;
+const userPass = process.env.userPass;
+
 const CONNECTION_URL = `mongodb+srv://${userName}:${userPass}@cluster0.rybon.mongodb.net/?retryWrites=true&w=majority`;
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT;
 
 mongoose.connect(CONNECTION_URL, { useNewUrlParser: true, useUnifiedTopology: true})
     .catch((error)=> console.log(error.message));
