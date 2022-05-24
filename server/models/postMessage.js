@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import PostComment from "./postComment.js";
 
 const postSchema = mongoose.Schema({
     title: String,
@@ -14,6 +15,23 @@ const postSchema = mongoose.Schema({
         type: Date,
         default: new Date()
     },
+    comments: [
+        {
+            user: String,
+            comment: {
+                type: String,
+                required: true,
+            },
+            commentLike: {
+                type: Number,
+                default: 0
+            },
+            createdTime: {
+                type: Date,
+                default: new Date()
+            }
+        }
+    ],
 });
 
 const PostMessage = mongoose.model('PostMessage', postSchema);
