@@ -36,12 +36,12 @@ const userSchema = mongoose.Schema({
     ],
     followers: [
         {
-            user_id: String,
+            follower_id: String,
         }
     ],
     following: [
         {
-            user_id: String,
+            following_id: String,
         }
     ],
 });
