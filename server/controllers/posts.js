@@ -23,7 +23,12 @@ export const getPost = async (req, res) => {
 export const createPost = async (req, res) => {
     const post = req.body;
     const newPost = new PostMessage(post);
-    // newPost.creator = req.user._id;
+    if (req.user.lastName) {
+        newPost.creator = `${req.user.firstName} ${req.user.lastName}`;
+    }
+    else {
+        newPost.creator = req.user.firstName;
+    }
 
     try {
         await newPost.save();

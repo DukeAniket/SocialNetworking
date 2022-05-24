@@ -52,6 +52,7 @@ export const login = async (req, res) => {
     
     const accessToken = jsonwebtoken.sign({
         firstName: user.firstName,
+        lastName: user.lastName,
         email: user.email,
     }, process.env.ACCESS_TOKEN_SECRET);
 

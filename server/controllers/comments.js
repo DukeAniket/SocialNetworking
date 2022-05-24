@@ -28,7 +28,6 @@ export const addComment = async (req, res) => {
             res.status(404).json({message: "Posts Not Found"});
         }
 
-        console.log(req.body);
         post.comments.push(comment);
         post.save();
         res.status(201).json(comment);
