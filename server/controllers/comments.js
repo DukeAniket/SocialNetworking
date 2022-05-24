@@ -1,4 +1,3 @@
-import PostComment from "../models/postComment.js";
 import PostMessage from "../models/postMessage.js";
 import url from "url";
 
@@ -22,7 +21,6 @@ export const getComments = async (req, res) => {
 export const addComment = async (req, res) => {
     const comment = req.body;
     var q = url.parse(req.url, true).query;
-    const newComment = new PostComment(comment);
     try {
         const post = await PostMessage.findById(q.id);
 

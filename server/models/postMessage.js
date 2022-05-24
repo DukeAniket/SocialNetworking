@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import PostComment from "./postComment.js";
 
 const postSchema = mongoose.Schema({
     title: String,
