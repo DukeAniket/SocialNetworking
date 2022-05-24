@@ -1,47 +1,49 @@
 import mongoose from "mongoose";
+import bcrypt from "bcrypt";
 
 const userSchema = mongoose.Schema({
     firstName: {
         type: String,
-        required: true,
+        required: [true, "Please Enter First Name"],
     },
     middleName: String,
     lastName: String,
-    userId: {
-        type: String,
-        required: true,
-    },
     email: {
         type: String,
-        required: true,
+        required: [true, "Please enter Email ID"],
+        unique: [true, "Email Already Exists"],
     },
     password: {
         type: String,
-        required: true,
+        required: [true, "Please enter a Password"],
+        minlength: [6, "Passwords must be atleast 6 characters"],
     },
-    dob: {
-        type: Date,
-        required: true,
-    },
+    // dob: {
+    //     type: Date,
+    //     required: [true, "Please enter your Date of Birth"],
+    // },
     bio: {
         type: String,
-        required: true,
+        required: [true, "Please Enter Bio"],
     },
 
-    profilepic: String,
+    avatar: String,
     posts: [
         {
-            post_id: String,
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "PostMessage",
         }
     ],
     followers: [
         {
-            follower_id: String,
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
         }
     ],
     following: [
         {
-            following_id: String,
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
         }
     ],
 });

@@ -23,6 +23,7 @@ export const getPost = async (req, res) => {
 export const createPost = async (req, res) => {
     const post = req.body;
     const newPost = new PostMessage(post);
+    // newPost.creator = req.user._id;
 
     try {
         await newPost.save();
