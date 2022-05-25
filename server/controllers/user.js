@@ -59,3 +59,35 @@ export const login = async (req, res) => {
     res.status(200).json({ accessToken: accessToken });
 }
 
+export const getProfile = async (req, res) => {
+    const userID = req.query.user_id;
+    try {
+        const userData = await User.findById(userID);
+        if (!userData) {
+            res.status(400).json({
+                success: false,
+                message: 'User does not exists',
+            });
+        }
+        let name;
+
+        if (userData.lastName) {
+            name = `${userData.firstName} ${userData.lastName}`;
+        }
+        else {
+            name = userData.firstName;
+        }
+
+        res.status(200).json({
+            name: name,
+            email: userData.email,
+            bio: userData.bio,
+            avatar: userData.avatar,
+            posts: userData.posts,
+            followers: userData.followers.length,
+            following: userData.following.length,
+        });
+    } catch (error) {
+        res.status(500).json({success: false, message: error.message});
+    }
+}
