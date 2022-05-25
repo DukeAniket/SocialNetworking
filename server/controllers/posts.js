@@ -1,5 +1,4 @@
 import PostMessage from "../models/postMessage.js";
-import url from "url";
 
 export const getPosts = async (req, res) => {
     try {
@@ -12,8 +11,7 @@ export const getPosts = async (req, res) => {
 
 export const getPost = async (req, res) => {
     try {
-        var q = url.parse(req.url, true).query;
-        const postMessage = await PostMessage.findById(q.id);
+        const postMessage = await PostMessage.findById(req.query.id);
         res.status(200).json(postMessage);
     } catch (error) {
         res.status(404).json({ message: error.message });
@@ -35,5 +33,18 @@ export const createPost = async (req, res) => {
         res.status(201).json(newPost);
     } catch (error) {
         res.status(500).json({ message: error.message });
+    }
+}
+
+export const deletePost = async (req, res) => {
+    const post_id = req.query.post_id;
+    try {
+        const deletedPost = await PostMessage.findByIdAndDelete(post_id);
+        if (deletedPost == null) {
+            return res.status(404).json({success: false, message: "Post Not Found!"})
+        }
+        res.status(200).json({success: true, message: "Post Deleted Successfully!"});
+    } catch (error) {
+        res.status(400).json({success: false, message: error.message});
     }
 }
