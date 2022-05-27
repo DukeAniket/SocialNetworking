@@ -17,6 +17,7 @@ const postSchema = mongoose.Schema({
     comments: [
         {
             user: String,
+            user_email: String,
             comment: {
                 type: String,
                 required: true,
