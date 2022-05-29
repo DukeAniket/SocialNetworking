@@ -91,3 +91,53 @@ export const getProfile = async (req, res) => {
         res.status(500).json({success: false, message: error.message});
     }
 }
+
+export const getFollowing = async (req, res) => {
+    try {
+        const user  = await User.findOne({email: req.user.email});
+        const result = await User.findById(user.following).select('firstName lastName email avatar');
+        res.json({following: result});
+        res.status(200);        
+    } catch (error) {
+        res.status(500).json({success: false, message: error.message});
+    }
+}
+
+export const getFollowers = async (req, res) => {
+    try {
+        const user  = await User.findOne({email: req.user.email});
+        const result = await User.findById(user.followers).select('firstName lastName email avatar');
+        res.json({followers: result});
+        res.status(200);        
+    } catch (error) {
+        res.status(500).json({success: false, message: error.message});
+    }
+}
+
+export const follow = async (req, res) => {
+    try {
+        const follower = await User.findOne({email: req.user.email});
+        const followed = await User.findOne({email: req.body.email});
+        followed.followers.push(follower);
+        follower.following.push(followed);
+        followed.save();
+        follower.save();
+        res.status(200).json({success: true, message: "User followed"});
+    } catch (error) {
+        res.status(500).json({success: false, message: error.message});
+    }
+}
+
+export const unfollow = async (req, res) => {
+    try {
+        const follower = await User.findOne({email: req.user.email});
+        const followed = await User.findOne({email: req.body.email});
+        followed.followers.pull(follower);
+        follower.following.pull(followed);
+        followed.save();
+        follower.save();
+        res.status(200).json({success: true, message: "User unfollowed"});
+    } catch (error) {
+        res.status(500).json({success: false, message: error.message});
+    }
+}
