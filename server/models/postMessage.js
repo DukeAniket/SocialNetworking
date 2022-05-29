@@ -4,32 +4,26 @@ const postSchema = mongoose.Schema({
     title: String,
     message: String,
     creator: String,
+    creator_email: {
+        type: String,
+        required: true
+    },
     tags: [String],
     selectedFile: String,
-    likeCount: {
-        type: Number,
-        default: 0
-    },
+    likes: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+        },
+    ],
     createdAt: {
         type: Date,
         default: new Date()
     },
     comments: [
         {
-            user: String,
-            user_email: String,
-            comment: {
-                type: String,
-                required: true,
-            },
-            commentLike: {
-                type: Number,
-                default: 0
-            },
-            createdTime: {
-                type: Date,
-                default: Date.now,
-            }
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "PostComment",
         }
     ],
 });
