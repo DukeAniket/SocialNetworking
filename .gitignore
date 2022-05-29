@@ -1,3 +1,4 @@
 /server/.env
 /server/urlList.txt
 /server/middleware/paginatedResults.js
+/server/middleware/shallowEqual.js
