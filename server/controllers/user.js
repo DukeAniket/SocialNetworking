@@ -8,15 +8,15 @@ dotenv.config();
 export const createUser = async (req, res) => {
     try {
         const { email } = req.body;
-        
-        const user = await User.findOne({email});
+
+        const user = await User.findOne({ email });
         if (user) {
             return res.status(400).json({
                 success: false,
                 message: "User Already Exists"
             });
         }
-        
+
         const userData = req.body;
         const newUser = new User(userData);
         newUser.password = await bcrypt.hash(newUser.password, 10);
@@ -34,29 +34,32 @@ export const createUser = async (req, res) => {
 
 export const login = async (req, res) => {
     const body = req.body;
-    const user = await User.findOne({email: body.email});
+    console.log(body);
+    const user = await User.findOne({ email: body.email });
+
+    console.log(user);
 
     if (!user) {
-        res.status(400).json({
+        return res.status(400).json({
             success: false,
             message: 'User does not exists',
         });
     }
     const validPassword = await bcrypt.compare(body.password, user.password);
     if (!validPassword) {
-        res.status(400).json({
+        return res.status(400).json({
             success: false,
             message: 'Invalid Password',
         });
     }
-    
+
     const accessToken = jsonwebtoken.sign({
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
     }, process.env.ACCESS_TOKEN_SECRET);
 
-    res.status(200).json({ accessToken: accessToken });
+    return res.status(200).json({ accessToken: accessToken });
 }
 
 export const getProfile = async (req, res) => {
@@ -64,7 +67,7 @@ export const getProfile = async (req, res) => {
     try {
         const userData = await User.findById(userID);
         if (!userData) {
-            res.status(400).json({
+            return res.status(400).json({
                 success: false,
                 message: 'User does not exists',
             });
@@ -78,7 +81,7 @@ export const getProfile = async (req, res) => {
             name = userData.firstName;
         }
 
-        res.status(200).json({
+        return res.status(200).json({
             name: name,
             email: userData.email,
             bio: userData.bio,
@@ -88,56 +91,56 @@ export const getProfile = async (req, res) => {
             following: userData.following.length,
         });
     } catch (error) {
-        res.status(500).json({success: false, message: error.message});
+        return res.status(500).json({ success: false, message: error.message });
     }
 }
 
 export const getFollowing = async (req, res) => {
     try {
-        const user  = await User.findOne({email: req.user.email});
+        const user = await User.findOne({ email: req.user.email });
         const result = await User.findById(user.following).select('firstName lastName email avatar');
-        res.json({following: result});
-        res.status(200);        
+        res.json({ following: result });
+        return res.status(200);
     } catch (error) {
-        res.status(500).json({success: false, message: error.message});
+        return res.status(500).json({ success: false, message: error.message });
     }
 }
 
 export const getFollowers = async (req, res) => {
     try {
-        const user  = await User.findOne({email: req.user.email});
+        const user = await User.findOne({ email: req.user.email });
         const result = await User.findById(user.followers).select('firstName lastName email avatar');
-        res.json({followers: result});
-        res.status(200);        
+        res.json({ followers: result });
+        return res.status(200);
     } catch (error) {
-        res.status(500).json({success: false, message: error.message});
+        return res.status(500).json({ success: false, message: error.message });
     }
 }
 
 export const follow = async (req, res) => {
     try {
-        const follower = await User.findOne({email: req.user.email});
-        const followed = await User.findOne({email: req.body.email});
+        const follower = await User.findOne({ email: req.user.email });
+        const followed = await User.findOne({ email: req.body.email });
         followed.followers.push(follower);
         follower.following.push(followed);
         followed.save();
         follower.save();
-        res.status(200).json({success: true, message: "User followed"});
+        return res.status(200).json({ success: true, message: "User followed" });
     } catch (error) {
-        res.status(500).json({success: false, message: error.message});
+        return res.status(500).json({ success: false, message: error.message });
     }
 }
 
 export const unfollow = async (req, res) => {
     try {
-        const follower = await User.findOne({email: req.user.email});
-        const followed = await User.findOne({email: req.body.email});
+        const follower = await User.findOne({ email: req.user.email });
+        const followed = await User.findOne({ email: req.body.email });
         followed.followers.pull(follower);
         follower.following.pull(followed);
         followed.save();
         follower.save();
-        res.status(200).json({success: true, message: "User unfollowed"});
+        return res.status(200).json({ success: true, message: "User unfollowed" });
     } catch (error) {
-        res.status(500).json({success: false, message: error.message});
+        return res.status(500).json({ success: false, message: error.message });
     }
 }

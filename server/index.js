@@ -8,8 +8,8 @@ import userRoutes from "./routes/user.js"
 const app = express();
 dotenv.config();
 
-app.use(express.json({limit: "30mb", extended : true}));
-app.use(express.urlencoded({limit: "30mb", extended : true}));
+app.use(express.json({ limit: "30mb", extended: true }));
+app.use(express.urlencoded({ limit: "30mb", extended: true }));
 
 app.use('/user', userRoutes);
 app.use('/posts', postRoutes);
@@ -26,8 +26,8 @@ const userPass = process.env.userPass;
 const CONNECTION_URL = `mongodb+srv://${userName}:${userPass}@cluster0.rybon.mongodb.net/?retryWrites=true&w=majority`;
 const PORT = process.env.PORT;
 
-mongoose.connect(CONNECTION_URL, { useNewUrlParser: true, useUnifiedTopology: true})
-    .catch((error)=> console.log(error.message));
+mongoose.connect(CONNECTION_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+    .catch((error) => console.log(error.message));
 app.listen(PORT, () => console.log(`Server running on Port ${PORT}`));
 
 
